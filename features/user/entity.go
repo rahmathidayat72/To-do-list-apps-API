@@ -19,10 +19,14 @@ type DataUserInterface interface {
 	SelectAll() ([]CoreUser, error)
 	Insert(insert CoreUser) error
 	Update(insert CoreUser, id uint) error
+	SelectById(id uint) (CoreUser, error)
+	Delete(id uint) error
 }
 
 type ServiceUserInterface interface {
 	GetAll() ([]CoreUser, error)
 	CreateUser(insert CoreUser) error
 	Update(insert CoreUser, id uint) error
+	SelectById(id uint) (CoreUser, error)
+	Delete(id uint) error
 }

@@ -113,3 +113,35 @@ func (r *UserQuery) Update(insert user.CoreUser, id uint) error {
 	}
 	return nil
 }
+
+// SelectById implements user.DataUserInterface.
+func (r *UserQuery) SelectById(id uint) (user.CoreUser, error) {
+	// panic("unimplemented")
+	var userData User
+	tx := r.db.Find(&userData, id)
+	if tx.Error != nil {
+		if tx.Error == gorm.ErrRecordNotFound {
+
+			return user.CoreUser{}, errors.New("User id not found")
+		}
+		return user.CoreUser{}, tx.Error
+	}
+	//mapping data dari model ke core
+	userCore := ModelToCore(userData)
+	return userCore, nil
+}
+
+// Delete implements user.DataUserInterface.
+func (r *UserQuery) Delete(id uint) error {
+	// panic("unimplemented")
+
+	var deleteUser = User{}
+	tx := r.db.Delete(&deleteUser, id)
+	if tx.Error != nil {
+		errors.New("Failed delete user")
+	}
+	if tx.RowsAffected == 0 {
+		return errors.New("user id not found")
+	}
+	return nil
+}

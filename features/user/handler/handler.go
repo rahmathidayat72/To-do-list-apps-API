@@ -99,3 +99,38 @@ func (handler *UserHandler) UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "User updated successfully", nil))
 
 }
+
+func (handler *UserHandler) GetUserById(c echo.Context) error {
+	id := c.Param("user_id")
+	idparam, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
+	}
+	user, err := handler.userService.SelectById(uint(idparam))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))
+	}
+	userById := UserResponse{
+		ID:          user.ID,
+		Name:        user.Name,
+		Email:       user.Email,
+		Address:     user.Address,
+		PhoneNumber: user.PhoneNumber,
+		CreatedAt:   user.CreatedAt,
+	}
+	return c.JSON(http.StatusOK, helper.WebResponse(200, "success get user by id", userById))
+}
+
+func (handler *UserHandler) DeleteUser(c echo.Context) error {
+	id := c.Param("user_id")
+	idparam, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
+	}
+	err = handler.userService.Delete(uint(idparam))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))
+	}
+	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "successfully delete user", nil))
+
+}

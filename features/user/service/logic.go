@@ -45,3 +45,23 @@ func (s *userService) Update(insert user.CoreUser, id uint) error {
 	err := s.userData.Update(insert, id)
 	return err
 }
+
+// SelectById implements user.ServiceUserInterface.
+func (s *userService) SelectById(id uint) (user.CoreUser, error) {
+	// mengechek id yang di input sudah benar atau tidak
+	if id == 0 {
+		return user.CoreUser{}, errors.New("validation error. invalid id")
+	}
+	result, err := s.userData.SelectById(id)
+	return result, err
+}
+
+// Delete implements user.ServiceUserInterface.
+func (s *userService) Delete(id uint) error {
+	// panic("unimplemented")
+	if id == 0 {
+		return errors.New("validation error. invalid id")
+	}
+	err := s.userData.Delete(id)
+	return err
+}
