@@ -21,6 +21,7 @@ type DataUserInterface interface {
 	Update(insert CoreUser, id uint) error
 	SelectById(id uint) (CoreUser, error)
 	Delete(id uint) error
+	Login(email, password string) (dataLogin CoreUser, err error)
 }
 
 type ServiceUserInterface interface {
@@ -29,4 +30,5 @@ type ServiceUserInterface interface {
 	Update(insert CoreUser, id uint) error
 	SelectById(id uint) (CoreUser, error)
 	Delete(id uint) error
+	Login(email, password string) (dataLogin CoreUser, token string, err error)
 }

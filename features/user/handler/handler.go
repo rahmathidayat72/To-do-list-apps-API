@@ -20,6 +20,35 @@ func NewHandlerUser(service user.ServiceUserInterface) *UserHandler {
 	}
 }
 
+func (handler *UserHandler) Login(c echo.Context) error {
+	inputLogin := new(LoginRequest)
+	if err := c.Bind(inputLogin); err != nil {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error bind data, data not valid", nil))
+	}
+
+	login, token, err := handler.userService.Login(inputLogin.Email, inputLogin.Password)
+	if err != nil {
+		if strings.Contains(err.Error(), "invalid password") {
+			return c.JSON(http.StatusUnauthorized, helper.WebResponse(http.StatusUnauthorized, "Invalid credentials", nil))
+		}
+		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Internal Server Error", nil))
+
+	}
+	// responseData := map[string]any{
+	// 	"token": token,
+	// 	"user":  login,
+	// }
+	var response = LoginResponse{
+		ID:          login.ID,
+		Name:        login.Name,
+		Email:       login.Email,
+		Address:     login.Address,
+		PhoneNumber: login.PhoneNumber,
+		Token:       token,
+	}
+	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "success login", response))
+}
+
 func (handler *UserHandler) GetAllUser(c echo.Context) error {
 	result, err := handler.userService.GetAll()
 	if err != nil {

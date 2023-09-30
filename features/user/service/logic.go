@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"rahmat/to-do-list-app/app/middlewares"
 	"rahmat/to-do-list-app/features/user"
 )
 
@@ -13,6 +14,23 @@ func NewServiceUser(repo user.DataUserInterface) user.ServiceUserInterface {
 
 type userService struct {
 	userData user.DataUserInterface
+}
+
+// Login implements user.ServiceUserInterface.
+func (s *userService) Login(email string, password string) (dataLogin user.CoreUser, token string, err error) {
+	// panic("unimplemented")
+
+	dataLogin, err = s.userData.Login(email, password)
+	if err != nil {
+		return user.CoreUser{}, "", err
+	}
+	//pembutan token
+	token, err = middlewares.CreatedToken(int(dataLogin.ID))
+	if err != nil {
+		return user.CoreUser{}, "", err
+	}
+
+	return dataLogin, token, nil
 }
 
 // CreateUser implements user.ServiceUserInterface.

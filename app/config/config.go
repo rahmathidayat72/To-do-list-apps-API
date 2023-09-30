@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-// var (
-// 	JWT_SECRET = ""
-// )
+var (
+	JWT_SECRET = ""
+)
 
 type AppConfig struct {
 	DB_USERNAME string
@@ -50,10 +50,10 @@ func ReadEnv() *AppConfig {
 		isRead = false
 	}
 
-	// if val, found := os.LookupEnv("JWTSECRET"); found {
-	// 	app.DB_NAME = val
-	// 	isRead = false
-	// }
+	if val, found := os.LookupEnv("JWTSECRET"); found {
+		app.DB_NAME = val
+		isRead = false
+	}
 
 	if isRead {
 		viper.AddConfigPath(".")
@@ -71,7 +71,7 @@ func ReadEnv() *AppConfig {
 		app.DB_HOSTNAME = viper.Get("DBHOST").(string)
 		app.DB_PORT, _ = strconv.Atoi(viper.Get("DBPORT").(string))
 		app.DB_NAME = viper.Get("DBNAME").(string)
-		// JWT_SECRET = viper.Get("JWTSECRET").(string)
+		JWT_SECRET = viper.Get("JWTSECRET").(string)
 	}
 
 	return &app

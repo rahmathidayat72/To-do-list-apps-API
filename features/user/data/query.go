@@ -18,6 +18,30 @@ func NewDataUser(db *gorm.DB) user.DataUserInterface {
 	}
 }
 
+// Login implements user.DataUserInterface.
+func (r *UserQuery) Login(email string, password string) (dataLogin user.CoreUser, err error) {
+	// panic("unimplemented")
+	var userLogin User
+
+	tx := r.db.Where("email = ?", email).Find(&userLogin)
+	if tx.Error != nil {
+		return user.CoreUser{}, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return user.CoreUser{}, errors.New("user not found")
+	}
+
+	// Memeriksa kecocokan password dengan yang di-hash
+	checkPassword := helper.CheckPassword(password, userLogin.Password)
+	if !checkPassword {
+		return user.CoreUser{}, errors.New("login failed, wrong password")
+	}
+
+	dataLogin = ModelToCore(userLogin)
+	return dataLogin, nil
+
+}
+
 // Insert implements user.DataUserInterface.
 func (r *UserQuery) Insert(insert user.CoreUser) error {
 	// mapping dari struct core to struct gorm model
