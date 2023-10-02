@@ -1,6 +1,7 @@
 package user
 
 import (
+	"rahmat/to-do-list-app/features/task"
 	"time"
 )
 
@@ -13,6 +14,7 @@ type CoreUser struct {
 	PhoneNumber string
 	CreatedAt   time.Time
 	UpdateAt    time.Time
+	Task        []task.CoreTask
 }
 
 type DataUserInterface interface {

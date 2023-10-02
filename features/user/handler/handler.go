@@ -1,7 +1,10 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
+	"rahmat/to-do-list-app/app/middlewares"
+	"rahmat/to-do-list-app/features/task"
 	"rahmat/to-do-list-app/features/user"
 	"rahmat/to-do-list-app/helper"
 	"strconv"
@@ -50,6 +53,7 @@ func (handler *UserHandler) Login(c echo.Context) error {
 }
 
 func (handler *UserHandler) GetAllUser(c echo.Context) error {
+	middlewares.ExtractTokenUserId(c)
 	result, err := handler.userService.GetAll()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))
@@ -64,6 +68,7 @@ func (handler *UserHandler) GetAllUser(c echo.Context) error {
 			Address:     value.Address,
 			PhoneNumber: value.PhoneNumber,
 			CreatedAt:   value.CreatedAt,
+			Task:        []task.CoreTask{},
 		})
 	}
 	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "seccess get All user", usersResponse))
@@ -99,6 +104,11 @@ func (handler *UserHandler) UpdateUser(c echo.Context) error {
 	idStr, err := strconv.Atoi(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
+	}
+	roleId := middlewares.ExtractTokenUserId(c)
+	fmt.Println(roleId)
+	if idStr != roleId {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "is not your id", nil))
 	}
 	userUpdate := new(UserRequest)
 	err = c.Bind(&userUpdate)
@@ -146,6 +156,7 @@ func (handler *UserHandler) GetUserById(c echo.Context) error {
 		Address:     user.Address,
 		PhoneNumber: user.PhoneNumber,
 		CreatedAt:   user.CreatedAt,
+		Task:        []task.CoreTask{},
 	}
 	return c.JSON(http.StatusOK, helper.WebResponse(200, "success get user by id", userById))
 }
@@ -155,6 +166,11 @@ func (handler *UserHandler) DeleteUser(c echo.Context) error {
 	idparam, err := strconv.Atoi(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
+	}
+	roleId := middlewares.ExtractTokenUserId(c)
+	if idparam != roleId {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "is not your id", nil))
+
 	}
 	err = handler.userService.Delete(uint(idparam))
 	if err != nil {

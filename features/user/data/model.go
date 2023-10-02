@@ -1,12 +1,13 @@
 package data
 
 import (
+	"rahmat/to-do-list-app/features/task"
 	"rahmat/to-do-list-app/features/user"
 
 	"gorm.io/gorm"
 )
 
-type 	User struct {
+type User struct {
 	gorm.Model
 	// ID          uint `gorm:"primaryKey"`
 	// CreatedAt   time.Time
@@ -17,7 +18,7 @@ type 	User struct {
 	Password    string
 	Address     string
 	PhoneNumber string
-	// Task        []Task `json:"task"`
+	Task        []task.CoreTask `gorm:"foreignKey:UserId"`
 }
 
 func CoreToModel(dataCore user.CoreUser) User {
