@@ -1,6 +1,9 @@
 package service
 
-import "rahmat/to-do-list-app/features/task"
+import (
+	"errors"
+	"rahmat/to-do-list-app/features/task"
+)
 
 type TaskService struct {
 	taskData task.DataTaskInterface
@@ -18,4 +21,25 @@ func (s *TaskService) GetAll(userId uint) ([]task.CoreTask, error) {
 
 	result, err := s.taskData.SelectAll(userId)
 	return result, err
+}
+
+// Create implements task.ServiceTaskInterface.
+func (s *TaskService) Create(input task.CoreTask, userId uint) error {
+	// panic("unimplemesnted")
+	// Cek apakah user sudah login atau belum
+	if userId == 0 {
+		return errors.New("user not logged in")
+	}
+
+	// // Pastikan userID dalam token sesuai dengan userID dalam proyek
+	if userId != input.UserId {
+		return errors.New("user does not have access to this task")
+	}
+
+	if input.Status != "Completed" && input.Status != "Not Completed" {
+		return errors.New("incorrect input, can only accept complete and incomplete input")
+	}
+	err := s.taskData.Insert(input, userId)
+	return err
+
 }

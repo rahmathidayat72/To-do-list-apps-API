@@ -53,7 +53,7 @@ func (handler *UserHandler) Login(c echo.Context) error {
 }
 
 func (handler *UserHandler) GetAllUser(c echo.Context) error {
-	middlewares.ExtractTokenUserId(c)
+	// middlewares.ExtractTokenUserId(c)
 	result, err := handler.userService.GetAll()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))

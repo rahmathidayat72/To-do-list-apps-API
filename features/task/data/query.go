@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"rahmat/to-do-list-app/features/task"
 
 	"gorm.io/gorm"
@@ -31,4 +32,19 @@ func (r *QueryTask) SelectAll(userId uint) ([]task.CoreTask, error) {
 		taskCore = append(taskCore, task)
 	}
 	return taskCore, nil
+}
+
+// Insert implements task.DataTaskInterface.
+func (r *QueryTask) Insert(input task.CoreTask, userId uint) error {
+	// panic("unimplemented")
+	taskGorm := CoreToModel(input)
+
+	tx := r.db.Create(&taskGorm)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return errors.New("failed to insert, row affected is 0")
+	}
+	return nil
 }
