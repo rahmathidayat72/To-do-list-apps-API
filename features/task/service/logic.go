@@ -53,10 +53,6 @@ func (s *TaskService) Update(id uint, input task.CoreTask, userId uint) error {
 		return errors.New("user not logged in")
 	}
 
-	// // Pastikan userID dalam token sesuai dengan userID dalam proyek
-	if userId != input.UserId {
-		return errors.New("user does not have access to this task")
-	}
 	err := s.taskData.Update(id, input, userId)
 	return err
 }

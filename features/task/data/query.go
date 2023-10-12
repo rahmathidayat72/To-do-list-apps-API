@@ -61,7 +61,7 @@ func (r *QueryTask) Update(id uint, input task.CoreTask, userId uint) error {
 	}
 	//mengecek ada data yang terupdate atau tidak
 	if tx.RowsAffected == 0 {
-		return errors.New("projeck id not found")
+		return errors.New("task id not found")
 	}
 	updateTask.Name = input.Name
 	updateTask.UserId = input.UserId
