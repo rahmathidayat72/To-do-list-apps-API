@@ -48,3 +48,51 @@ func (r *QueryTask) Insert(input task.CoreTask, userId uint) error {
 	}
 	return nil
 }
+
+// Update implements task.DataTaskInterface.
+func (r *QueryTask) Update(id uint, input task.CoreTask, userId uint) error {
+	// panic("unimplemented")
+
+	var updateTask Task
+	tx := r.db.Where("id = ? AND user_id = ?", id, userId).First(&updateTask)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	//mengecek ada data yang terupdate atau tidak
+	if tx.RowsAffected == 0 {
+		return errors.New("projeck id not found")
+	}
+	updateTask.Name = input.Name
+	updateTask.UserId = input.UserId
+	updateTask.Description = input.Description
+
+	tx = r.db.Model(&Task{}).Where("id=?", id).Updates(updateTask)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}
+
+// Status implements task.DataTaskInterface.
+func (r *QueryTask) Status(id uint, input task.CoreTask, userId uint) error {
+	// panic("unimplemented")
+
+	var updateStatus Task
+	tx := r.db.Where("id = ? AND user_id = ?", id, userId).First(&updateStatus, id, userId)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	//mengecek ada data yang terupdate atau tidak
+	if tx.RowsAffected == 0 {
+		return errors.New("Task id not found")
+	}
+
+	updateStatus.Status = input.Status
+
+	tx = r.db.Model(&Task{}).Where("id=?", id).Updates(updateStatus)
+
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
+}

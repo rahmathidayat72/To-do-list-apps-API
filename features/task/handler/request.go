@@ -9,6 +9,16 @@ type TaskRequest struct {
 	Status      string `json:"status" form:"status"`
 }
 
+type UpdateTaskInput struct {
+	Name        string `json:"name" form:"name"`
+	UserId      uint   `json:"user_id" form:"user_id"`
+	Description string `json:"description" form:"description"`
+}
+
+type StatusUpdate struct {
+	Status string `json:"status" form:"status"`
+}
+
 func ModelToCore(r TaskRequest) task.CoreTask {
 	return task.CoreTask{
 

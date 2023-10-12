@@ -43,3 +43,39 @@ func (s *TaskService) Create(input task.CoreTask, userId uint) error {
 	return err
 
 }
+
+// Update implements task.ServiceTaskInterface.
+func (s *TaskService) Update(id uint, input task.CoreTask, userId uint) error {
+	// panic("unimplemented")
+	// Cek apakah user sudah login atau belum
+	if userId == 0 {
+		return errors.New("user not logged in")
+	}
+
+	// // Pastikan userID dalam token sesuai dengan userID dalam proyek
+	if userId != input.UserId {
+		return errors.New("user does not have access to this task")
+	}
+	err := s.taskData.Update(id, input, userId)
+	return err
+}
+
+// Status implements task.ServiceTaskInterface.
+func (s *TaskService) Status(id uint, input task.CoreTask, userId uint) error {
+	// panic("unimplemented")
+	// Cek apakah user sudah login atau belum
+	if userId == 0 {
+		return errors.New("user not logged in")
+	}
+
+	if input.Status == "" {
+		return errors.New("Status cannot be empty, Status not updated")
+	}
+
+	if input.Status != "Completed" && input.Status != "Not Completed" {
+		return errors.New("incorrect input, can only accept complete and incomplete input")
+	}
+	err := s.taskData.Status(id, input, userId)
+	return err
+
+}

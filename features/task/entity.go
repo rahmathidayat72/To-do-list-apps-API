@@ -15,9 +15,13 @@ type CoreTask struct {
 type DataTaskInterface interface {
 	SelectAll(userId uint) ([]CoreTask, error)
 	Insert(input CoreTask, userId uint) error
+	Update(id uint, input CoreTask, userId uint) error
+	Status(id uint, input CoreTask, userId uint) error
 }
 
 type ServiceTaskInterface interface {
 	GetAll(userId uint) ([]CoreTask, error)
 	Create(input CoreTask, userId uint) error
+	Update(id uint, input CoreTask, userId uint) error
+	Status(id uint, input CoreTask, userId uint) error
 }

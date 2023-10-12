@@ -38,5 +38,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	e.GET("/tasks", taskHandlerApi.GetAllTask, middlewares.JWTMiddleware())
 	e.POST("/tasks", taskHandlerApi.CreateTask, middlewares.JWTMiddleware())
+	e.PUT("/tasks/:task_id", taskHandlerApi.UpdateTask, middlewares.JWTMiddleware())
+	e.PUT("/status/:task_id", taskHandlerApi.StatusUpdate, middlewares.JWTMiddleware())
 
 }
