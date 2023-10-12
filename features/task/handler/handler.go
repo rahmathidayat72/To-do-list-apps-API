@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"rahmat/to-do-list-app/app/middlewares"
 	"rahmat/to-do-list-app/features/task"
@@ -41,7 +42,7 @@ func (hendler *TaskHandler) GetAllTask(c echo.Context) error {
 		})
 
 	}
-	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "Seccess read data project", taskResponse))
+	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "Seccess read data task", taskResponse))
 
 }
 
@@ -150,10 +151,20 @@ func (hendler *TaskHandler) Delete(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
 	}
+
+	// Validasi ID sebelum menghapus tugas
+	if idparam <= 0 {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "Error: Invalid ID", nil))
+	}
+
 	err = hendler.taskService.Delete(uint(idparam), uint(userId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))
 	}
+
+	// Logging penghapusan tugas yang berhasil
+	log.Printf("Task with ID %d deleted by user %d", idparam, userId)
+
 	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "successfully delete task", nil))
 
 }

@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"log"
 	"rahmat/to-do-list-app/features/task"
 
 	"gorm.io/gorm"
@@ -101,13 +102,21 @@ func (r *QueryTask) Status(id uint, input task.CoreTask, userId uint) error {
 func (r *QueryTask) Delete(Id uint, userId uint) error {
 	// panic("unimplemented")
 	var deleteTask Task
+	// Validasi Id dan userId
+	if Id == 0 || userId == 0 {
+		return errors.New("Invalid Id or userId")
+	}
+
 	tx := r.db.Where("id = ? AND user_id = ?", Id, userId).Delete(&deleteTask, Id)
 	if tx.Error != nil {
-		return errors.New("failed to delete task")
+		return errors.New("failed to delete task" + tx.Error.Error())
 	}
 	//mengecek ada data yang terupdate atau tidak
 	if tx.RowsAffected == 0 {
 		return errors.New("Task id not found")
 	}
+	// Log penghapusan tugas
+	log.Printf("Task with Id %d deleted by user %d", Id, userId)
+
 	return nil
 }

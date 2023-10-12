@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"log"
 	"rahmat/to-do-list-app/features/task"
 )
 
@@ -69,14 +70,18 @@ func (s *TaskService) Status(id uint, input task.CoreTask, userId uint) error {
 	}
 
 	if input.Status == "" {
-		return errors.New("Status cannot be empty, Status not updated")
+		return errors.New("error: Status cannot be empty; Status not updated")
 	}
 
 	if input.Status != "Completed" && input.Status != "Not Completed" {
-		return errors.New("incorrect input, can only accept complete and incomplete input")
+		return errors.New("error: Incorrect input; Only 'Completed' and 'Not Completed' are accepted")
 	}
 	err := s.taskData.Status(id, input, userId)
-	return err
+	if err != nil {
+		return errors.New("Error: Failed to update task status - " + err.Error())
+	}
+
+	return nil
 
 }
 
@@ -91,5 +96,12 @@ func (s *TaskService) Delete(Id uint, userId uint) error {
 		return errors.New("validation error. invalid id")
 	}
 	err := s.taskData.Delete(Id, userId)
-	return err
+	if err != nil {
+		// Tambahkan pesan kesalahan yang lebih informatif jika penghapusan gagal
+		return errors.New("failed to delete task: " + err.Error())
+	}
+	// Logging penghapusan tugas yang berhasil
+	log.Printf("Task with Id %d deleted by user %d", Id, userId)
+
+	return nil
 }
