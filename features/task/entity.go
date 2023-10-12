@@ -17,6 +17,7 @@ type DataTaskInterface interface {
 	Insert(input CoreTask, userId uint) error
 	Update(id uint, input CoreTask, userId uint) error
 	Status(id uint, input CoreTask, userId uint) error
+	Delete(Id uint, userId uint) error
 }
 
 type ServiceTaskInterface interface {
@@ -24,4 +25,5 @@ type ServiceTaskInterface interface {
 	Create(input CoreTask, userId uint) error
 	Update(id uint, input CoreTask, userId uint) error
 	Status(id uint, input CoreTask, userId uint) error
+	Delete(Id uint, userId uint) error
 }

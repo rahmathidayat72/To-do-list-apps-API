@@ -142,3 +142,18 @@ func (hendler *TaskHandler) StatusUpdate(c echo.Context) error {
 	// Jika status tugas berhasil diperbarui, kembalikan respons sukses
 	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "task updated status successfully", nil))
 }
+
+func (hendler *TaskHandler) Delete(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(c)
+	id := c.Param("task_id")
+	idparam, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, helper.WebResponse(http.StatusBadRequest, "error. id should be a number", nil))
+	}
+	err = hendler.taskService.Delete(uint(idparam), uint(userId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Error", nil))
+	}
+	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "successfully delete task", nil))
+
+}

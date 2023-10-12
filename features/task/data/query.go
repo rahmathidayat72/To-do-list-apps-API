@@ -96,3 +96,18 @@ func (r *QueryTask) Status(id uint, input task.CoreTask, userId uint) error {
 	}
 	return nil
 }
+
+// Delete implements task.DataTaskInterface.
+func (r *QueryTask) Delete(Id uint, userId uint) error {
+	// panic("unimplemented")
+	var deleteTask Task
+	tx := r.db.Where("id = ? AND user_id = ?", Id, userId).Delete(&deleteTask, Id)
+	if tx.Error != nil {
+		return errors.New("failed to delete task")
+	}
+	//mengecek ada data yang terupdate atau tidak
+	if tx.RowsAffected == 0 {
+		return errors.New("Task id not found")
+	}
+	return nil
+}

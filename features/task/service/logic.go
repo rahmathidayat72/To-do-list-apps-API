@@ -79,3 +79,17 @@ func (s *TaskService) Status(id uint, input task.CoreTask, userId uint) error {
 	return err
 
 }
+
+// Delete implements task.ServiceTaskInterface.
+func (s *TaskService) Delete(Id uint, userId uint) error {
+	// panic("unimplemented")
+	// Cek apakah user sudah login atau belum
+	if userId == 0 {
+		return errors.New("user not logged in")
+	}
+	if Id == 0 {
+		return errors.New("validation error. invalid id")
+	}
+	err := s.taskData.Delete(Id, userId)
+	return err
+}

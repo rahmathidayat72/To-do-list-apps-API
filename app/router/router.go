@@ -40,5 +40,6 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.POST("/tasks", taskHandlerApi.CreateTask, middlewares.JWTMiddleware())
 	e.PUT("/tasks/:task_id", taskHandlerApi.UpdateTask, middlewares.JWTMiddleware())
 	e.PUT("/status/:task_id", taskHandlerApi.StatusUpdate, middlewares.JWTMiddleware())
+	e.DELETE("/tasks/:task_id", taskHandlerApi.Delete, middlewares.JWTMiddleware())
 
 }
