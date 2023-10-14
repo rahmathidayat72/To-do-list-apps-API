@@ -104,7 +104,7 @@ func (r *QueryTask) Delete(Id uint, userId uint) error {
 	var deleteTask Task
 	// Validasi Id dan userId
 	if Id == 0 || userId == 0 {
-		return errors.New("Invalid Id or userId")
+		return errors.New("invalid Id or userId")
 	}
 
 	tx := r.db.Where("id = ? AND user_id = ?", Id, userId).Delete(&deleteTask, Id)
