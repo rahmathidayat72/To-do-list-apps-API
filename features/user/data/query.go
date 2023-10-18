@@ -102,6 +102,7 @@ func (r *UserQuery) SelectAll() ([]user.CoreUser, error) {
 	return userCore, nil
 }
 
+
 // Update implements user.DataUserInterface.
 func (r *UserQuery) Update(insert user.CoreUser, id uint) error {
 	// panic("unimplemented")
@@ -162,7 +163,7 @@ func (r *UserQuery) Delete(id uint) error {
 	var deleteUser = User{}
 	tx := r.db.Delete(&deleteUser, id)
 	if tx.Error != nil {
-		errors.New("Failed delete user")
+		errors.New("failed delete user")
 	}
 	if tx.RowsAffected == 0 {
 		return errors.New("user id not found")

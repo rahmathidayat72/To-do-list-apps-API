@@ -43,9 +43,9 @@ func (s *userService) CreateUser(insert user.CoreUser) error {
 
 	err := s.userData.Insert(insert)
 	if err != nil {
-		return errors.New("Error inset data")
+		return errors.New("error inset data")
 	}
-	return err
+	return nil
 }
 
 // GetAll implements user.ServiceUserInterface.

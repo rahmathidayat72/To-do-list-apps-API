@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"rahmat/to-do-list-app/app/middlewares"
-	"rahmat/to-do-list-app/features/task"
 	"rahmat/to-do-list-app/features/user"
 	"rahmat/to-do-list-app/helper"
 	"strconv"
@@ -34,7 +33,7 @@ func (handler *UserHandler) Login(c echo.Context) error {
 		if strings.Contains(err.Error(), "invalid password") {
 			return c.JSON(http.StatusUnauthorized, helper.WebResponse(http.StatusUnauthorized, "Invalid credentials", nil))
 		}
-		return c.JSON(http.StatusInternalServerError, helper.WebResponse(http.StatusInternalServerError, "Internal Server Error", nil))
+		return c.JSON(http.StatusNotFound, helper.WebResponse(http.StatusNotFound, "error: email or password is wrong", nil))
 
 	}
 	// responseData := map[string]any{
@@ -61,6 +60,7 @@ func (handler *UserHandler) GetAllUser(c echo.Context) error {
 	var usersResponse []UserResponse
 	//mapping dari truck core ke response
 	for _, value := range result {
+
 		usersResponse = append(usersResponse, UserResponse{
 			ID:          value.ID,
 			Name:        value.Name,
@@ -68,7 +68,6 @@ func (handler *UserHandler) GetAllUser(c echo.Context) error {
 			Address:     value.Address,
 			PhoneNumber: value.PhoneNumber,
 			CreatedAt:   value.CreatedAt,
-			Task:        []task.CoreTask{},
 		})
 	}
 	return c.JSON(http.StatusOK, helper.WebResponse(http.StatusOK, "seccess get All user", usersResponse))
@@ -156,7 +155,6 @@ func (handler *UserHandler) GetUserById(c echo.Context) error {
 		Address:     user.Address,
 		PhoneNumber: user.PhoneNumber,
 		CreatedAt:   user.CreatedAt,
-		Task:        []task.CoreTask{},
 	}
 	return c.JSON(http.StatusOK, helper.WebResponse(200, "success get user by id", userById))
 }
